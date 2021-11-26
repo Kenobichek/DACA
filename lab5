@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+double length(int x1, int y1, int x2, int y2){
+    return sqrt(pow((x1 - x2),2) + pow((y1 - y2),2));
+}
+
+bool isInside (int x0, int y0, int R,int x1, int y1){  
+    return R > length(x0, y0, x1, y1);
+}
+
+bool isOn (int x0, int y0, int R,int x1, int y1){  
+    return R == length(x0, y0, x1, y1);
+}
+
+double perpendicular(int x0, int y0, int R, int x1, int y1, int x2, int y2){
+    return ( abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) ) / ( sqrt(  pow((y2 - y1), 2) + pow((x2 - x1), 2))  );
+}
+
+bool test1(int x0, int y0, int R, int x1, int y1, int x2, int y2, int x3, int y3){
+    
+    if(isOn(x0, y0, R, x1, y1) || isOn(x0, y0, R, x2, y2) || isOn(x0, y0, R, x3, y3)) return true; // point on the circle line
+
+    if(isInside(x0, y0, R, x1, y1) && isInside(x0, y0, R, x2, y2) && isInside(x0, y0, R, x3, y3)) return false; // triangle inside circle
+    
+    if(isInside(x0, y0, R, x1, y1) || isInside(x0, y0, R, x2, y2) || isInside(x0, y0, R, x3, y3)) return true; // the point is inside the circle and outside
+    
+    return false;
+}
+
+bool test2(int x0, int y0, int R, int x1, int y1, int x2, int y2, int x3, int y3){
+    
+   if(perpendicular(x0, y0, R, x1, y1, x2, y2) <= R){
+        double a = length(x0, y0, x1, y1);
+        double b = length(x0, y0, x2, y2);
+       
+        double c = length(x1, y1, x2, y2);
+        
+        if(c > max(a, b)){
+            return true;
+        }
+   } 
+
+   if(perpendicular(x0, y0, R, x2, y2, x3, y3) <= R){
+        double a = length(x0, y0, x2, y2);
+        double b = length(x0, y0, x3, y3);
+       
+        double c = length(x2, y2, x3, y3);
+        
+        if(c > max(a, b)){
+            return true;
+        }
+   }
+    
+    if(perpendicular(x0, y0, R, x1, y1, x3, y3) <= R){
+        
+        double a = length(x0, y0, x1, y1);
+        double b = length(x0, y0, x3, y3);
+       
+        double c = length(x1, y1, x3, y3);
+        
+        if(c > max(a, b)){
+            return true;
+        }
+   }
+    
+   return false;
+}
+
+string solve(int x0, int y0, int R, int x1, int y1, int x2, int y2, int x3, int y3){
+    
+    if(test1(x0, y0, R, x1, y1, x2, y2, x3, y3)){
+        return "YES";
+    }
+    
+    if(test2(x0, y0, R, x1, y1, x2, y2, x3, y3)){
+        return "YES";
+    }
+    
+    return "NO";
+}
+
+int main(){
+    int T;
+    cin >> T;
+    for(int i = 0; i < T; ++i){
+        
+        int x0, y0, R;    // circle
+        cin >> x0 >> y0 >> R;
+        
+        int x1, y1;       // triangle
+        cin >> x1 >> y1;
+        
+        int x2, y2;
+        cin >> x2 >> y2;
+        
+        int x3, y3;
+        cin >> x3 >> y3;
+        
+        
+        cout << solve(x0, y0, R, x1, y1, x2, y2, x3, y3) << endl;
+    }
+
+    return 0;
+}
